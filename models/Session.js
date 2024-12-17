@@ -8,11 +8,11 @@ const Session = sequelize.define(
     playerId: { type: DataTypes.INTEGER, allowNull: false },
     sectionId: { type: DataTypes.INTEGER, allowNull: false },
     gameId: { type: DataTypes.INTEGER, allowNull: false },
-    type: { type: DataTypes.ENUM("multi", "single"), allowNull: false },
+    type: { type: DataTypes.STRING, allowNull: false },
     startTime: { type: DataTypes.DATE },
     endTime: { type: DataTypes.DATE },
     status: {
-      type: DataTypes.ENUM("paid", "notPaid"),
+      type: DataTypes.STRING,
       defaultValue: "notPaid",
     },
     amount: { type: DataTypes.DECIMAL(10, 2) },

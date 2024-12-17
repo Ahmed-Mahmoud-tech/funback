@@ -18,12 +18,15 @@ app.use(cookieParser())
 
 // Middleware
 app.use(express.json())
-app.use(
-  cors({
-    origin: process.env.FRONT_URL, // Replace with your frontend's origin
-    credentials: true, // Allow credentials (cookies) to be sent
-  })
-)
+// app.use(
+//   cors({
+//     origin: process.env.FRONT_URL, // Replace with your frontend's origin
+//     credentials: true, // Allow credentials (cookies) to be sent
+//   })
+// )
+
+app.use(cors())
+
 app.use(
   session({
     secret: process.env.JWT_SECRET,

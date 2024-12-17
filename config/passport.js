@@ -24,12 +24,19 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
-        process.env.NODE_ENV === "production"
-          ? "https://virtualscene.tech/api/auth/google/callback" // عنوان الإنتاج
-          : "http://localhost:5000/api/auth/google/callback", // عنوان محلي      scope: ["profile", "email"],
+        // process.env.NODE_ENV === "production"
+        // ?
+        "https://virtualscene.tech/api/auth/google/callback", // عنوان الإنتاج
+      // : "http://localhost:5000/api/auth/google/callback", // عنوان محلي
+      // scope: ["profile", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        console.log(
+          process.env.NODE_ENV === "production",
+          "dddddddddddd",
+          process.env.NODE_ENV
+        )
         let user = await User.findOne({ email: profile.emails[0].value })
         if (!user) {
           console.log(profile, "5222222222222")

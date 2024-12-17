@@ -6,7 +6,7 @@ const User = sequelize.define(
   {
     username: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false },
-    type: { type: DataTypes.ENUM("owner", "employee"), allowNull: true },
+    type: { type: DataTypes.STRING, allowNull: true },
     phoneNumber: { type: DataTypes.STRING },
     placeName: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },

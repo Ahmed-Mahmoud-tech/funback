@@ -14,6 +14,7 @@ router.post("/", async (req, res) => {
 
 // Get all users
 router.get("/", async (req, res) => {
+  res.json("00000000000")
   try {
     const users = await User.findAll()
     res.json(users)

@@ -1,3 +1,5 @@
+CREATE DATABASE fun;
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
@@ -62,7 +64,7 @@ CREATE TABLE players_purchases (
     playerId INT NOT NULL,
     item_id INT REFERENCES purchases_items(id),
     count INT NOT NULL,
-    status enum_players_purchases_status NOT NULL DEFAULT 'notPaid',
+    status VARCHAR(50) CHECK (status IN ('paid', 'notPaid')) NOT NULL DEFAULT 'notPaid',
     createdBy INT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -76,7 +78,7 @@ CREATE TABLE session (
     type VARCHAR(50) CHECK (type IN ('multi', 'single')) NOT NULL,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
-    status enum_session_status NOT NULL DEFAULT 'notPaid',
+    status VARCHAR(50) CHECK (status IN ('paid', 'notPaid')) NOT NULL DEFAULT 'notPaid',
     amount DECIMAL(10, 2),
     created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

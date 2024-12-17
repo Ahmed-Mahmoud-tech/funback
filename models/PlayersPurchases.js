@@ -9,7 +9,7 @@ const PlayersPurchase = sequelize.define(
     item: { type: DataTypes.INTEGER, allowNull: false },
     count: { type: DataTypes.INTEGER, allowNull: false },
     status: {
-      type: DataTypes.ENUM("paid", "notPaid"),
+      type: DataTypes.STRING,
       defaultValue: "notPaid",
     },
     createdBy: { type: DataTypes.INTEGER },

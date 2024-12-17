@@ -8,7 +8,7 @@ const Request = sequelize.define(
     fromUser: { type: DataTypes.INTEGER, allowNull: false },
     toUser: { type: DataTypes.INTEGER, allowNull: false },
     status: {
-      type: DataTypes.ENUM("pending", "accepted", "rejected"),
+      type: DataTypes.STRING,
       defaultValue: "pending",
     },
     createdBy: { type: DataTypes.INTEGER },
