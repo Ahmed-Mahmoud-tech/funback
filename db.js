@@ -25,7 +25,7 @@ const sequelize = new Sequelize(
     dialect: "postgres",
     dialectOptions: {
       ssl: {
-        require: true, // Enforce SSL connection
+        require: false, // Enforce SSL connection
         rejectUnauthorized: false, // Skip certificate validation
       },
     },
