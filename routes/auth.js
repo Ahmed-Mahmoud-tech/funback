@@ -36,13 +36,23 @@ router.get(
   }),
   (req, res) => {
     const token = createToken(res, req.user.id, req.user.type || null)
-    res.redirect(`${FRONT_URL}/MainInfoScreen?token=${token}`)
+    res.redirect(
+      `${FRONT_URL}/MainInfoScreen?token=${token}&&userId=${req.user.id}`
+    )
   }
 )
-
-router.get("/logout", (req, res) => {
-  req.logout()
-  res.redirect(`${FRONT_URL}/LoginScreen`)
+router.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err) // Handle any logout errors
+    }
+    res.json("OK")
+  })
 })
+
+// router.get("/logout", (req, res) => {
+//   req.logout()
+//   res.redirect(`${FRONT_URL}/LoginScreen`)
+// })
 
 module.exports = router
