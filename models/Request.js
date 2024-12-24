@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize")
 const sequelize = require("../db")
+const User = require("./User")
 
 const Request = sequelize.define(
   "Request",
@@ -19,5 +20,6 @@ const Request = sequelize.define(
     tableName: "requests",
   }
 )
+Request.belongsTo(User, { as: "toUserInfo", foreignKey: "toUser" })
 
 module.exports = Request

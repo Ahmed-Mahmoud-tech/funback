@@ -23,7 +23,7 @@ CREATE TABLE requests (
     id SERIAL PRIMARY KEY,
     from_user INT REFERENCES users(id),
     to_user INT REFERENCES users(id),
-    status VARCHAR(50) CHECK (status IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
+    status VARCHAR(50) CHECK (status IN ('pending', 'accepted', 'rejected', 'blocked')) DEFAULT 'pending',
     created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

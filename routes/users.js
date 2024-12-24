@@ -26,7 +26,6 @@ router.get("/", async (req, res) => {
 // Get a single user by ID
 router.get("/:id", verifyToken, async (req, res) => {
   try {
-    console.log(req.user.id, "99999999999999999999999999")
     const user = await User.findByPk(req.params.id)
     if (!user) return res.status(404).json({ error: "User not found" })
     res.json(user)

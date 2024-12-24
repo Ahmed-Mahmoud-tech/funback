@@ -1,57 +1,138 @@
 const express = require("express")
 const router = express.Router()
-const Section = require("../models/Section")
 
-// Create a new section
+const User = require("../models/User")
+const Request = require("../models/Request")
+const { verifyToken } = require("../middleware/verifyToken")
+// const { Op } = require("sequelize")
+
 router.post("/", async (req, res) => {
   try {
-    const section = await Section.create(req.body)
-    res.status(201).json(section)
+    // Find the employee by phone number
+    const employee = await User.findOne({
+      where: { phoneNumber: req.body.phone, type: "employee" },
+    })
+
+    if (!employee) {
+      return res
+        .status(404)
+        .json({ error: "Employee not found with the provided phone number" })
+    }
+
+    // Check if a request already exists
+    const existingRequest = await Request.findOne({
+      where: {
+        fromUser: req.body.userId,
+        toUser: employee.id,
+      },
+    })
+
+    if (existingRequest) {
+      if (existingRequest.status === "rejected") {
+        // Update the status to "pending"
+        existingRequest.status = "pending"
+        await existingRequest.save()
+
+        return res.status(200).json({
+          message: "Request status updated to pending.",
+          request: {
+            id: existingRequest.id,
+            status: existingRequest.status,
+            updatedAt: existingRequest.updatedAt,
+            toUserInfo: {
+              username: employee.username,
+              phoneNumber: employee.phoneNumber,
+            },
+          },
+        })
+      } else {
+        // Return an error for existing requests with other statuses
+        return res.status(400).json({
+          error: "This employee has already been requested.",
+        })
+      }
+    }
+
+    // Create a new request if no existing request is found
+    const request = await Request.create({
+      fromUser: req.body.userId,
+      toUser: employee.id,
+      status: "pending",
+    })
+
+    const result = {
+      status: request.dataValues.status,
+      id: request.dataValues.id,
+      updatedAt: request.dataValues.updatedAt,
+      toUserInfo: {
+        username: employee.username,
+        phoneNumber: employee.phoneNumber,
+      },
+    }
+
+    res.status(201).json(result)
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 })
 
-// Get all sections
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
-    const sections = await Section.findAll()
-    res.json(sections)
+    console.log("Fetching requests for user:", req.user)
+
+    const requests = await Request.findAll({
+      where: {
+        fromUser: req.user.id,
+        // status: {
+        //   [Op.ne]: "blocked",
+        // },
+      },
+      include: [
+        {
+          model: User,
+          as: "toUserInfo",
+          attributes: ["id", "username", "phoneNumber"],
+        },
+      ],
+    })
+
+    res.json(requests)
   } catch (error) {
+    console.error("Error fetching requests:", error)
     res.status(500).json({ error: error.message })
   }
 })
 
-// Get a section by ID
+// Get a requests by ID
 router.get("/:id", async (req, res) => {
   try {
-    const section = await Section.findByPk(req.params.id)
-    if (!section) return res.status(404).json({ error: "Section not found" })
-    res.json(section)
+    const requests = await Request.findByPk(req.params.id)
+    if (!requests) return res.status(404).json({ error: "Request not found" })
+    res.json(requests)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// Update a section by ID
+// Update a requests by ID
 router.put("/:id", async (req, res) => {
   try {
-    const section = await Section.findByPk(req.params.id)
-    if (!section) return res.status(404).json({ error: "Section not found" })
-    await section.update(req.body)
-    res.json(section)
+    const requests = await Request.findByPk(req.params.id)
+    if (!requests) return res.status(404).json({ error: "Request not found" })
+    await requests.update(req.body)
+    res.json(requests)
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 })
 
-// Delete a section by ID
+// Delete a requests by ID
 router.delete("/:id", async (req, res) => {
   try {
-    const section = await Section.findByPk(req.params.id)
-    if (!section) return res.status(404).json({ error: "Section not found" })
-    await section.destroy()
-    res.json({ message: "Section deleted successfully" })
+    const requests = await Request.findByPk(req.params.id)
+    if (!requests) return res.status(404).json({ error: "Request not found" })
+    await requests.destroy()
+    res.json({ message: "Request deleted successfully" })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
