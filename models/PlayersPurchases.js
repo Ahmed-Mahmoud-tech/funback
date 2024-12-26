@@ -6,6 +6,7 @@ const PlayersPurchase = sequelize.define(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     playerId: { type: DataTypes.INTEGER, allowNull: false },
+    ownerId: { type: DataTypes.INTEGER, allowNull: false },
     item: { type: DataTypes.INTEGER, allowNull: false },
     count: { type: DataTypes.INTEGER, allowNull: false },
     status: {

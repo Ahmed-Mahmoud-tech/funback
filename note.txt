@@ -41,33 +41,35 @@ CREATE TABLE sections (
 CREATE TABLE games (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    owner_id INT REFERENCES users(id),
-    single_price DECIMAL(10, 2),
-    multi_price DECIMAL(10, 2),
-    created_by INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    "ownerId" INT REFERENCES users(id),
+    "singlePrice" DECIMAL(10, 2),
+    "multiPrice" DECIMAL(10, 2),
+    "createdBy" INT,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE purchases_items (
+CREATE TABLE purchases_item (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2),
-    owner_id INT REFERENCES users(id),
-    created_by INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    "ownerId" INT REFERENCES users(id),
+    "createdBy" INT,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE players_purchases (
     id SERIAL PRIMARY KEY,
-    playerId INT NOT NULL,
-    item_id INT REFERENCES purchases_items(id),
-    count INT NOT NULL,
-    status VARCHAR(50) CHECK (status IN ('paid', 'notPaid')) NOT NULL DEFAULT 'notPaid',
-    createdBy INT,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "playerId" INT NOT NULL,
+    "item" INT REFERENCES purchases_items(id),
+    "ownerId" INT REFERENCES users(id),
+    "count" INT NOT NULL,
+    "status" VARCHAR(50) CHECK (status IN ('paid', 'notPaid')) NOT NULL DEFAULT 'notPaid',
+    "createdBy" INT,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE session (

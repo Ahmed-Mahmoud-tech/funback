@@ -6,6 +6,7 @@ const Game = sequelize.define(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
+    ownerId: { type: DataTypes.INTEGER, allowNull: false },
     singlePrice: { type: DataTypes.DECIMAL(10, 2) },
     multiPrice: { type: DataTypes.DECIMAL(10, 2) },
     createdBy: { type: DataTypes.INTEGER },
@@ -13,7 +14,7 @@ const Game = sequelize.define(
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   {
-    tableName: "games",
+    tableName: "game",
   }
 )
 

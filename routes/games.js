@@ -1,11 +1,12 @@
 const express = require("express")
 const router = express.Router()
 const Game = require("../models/Game")
+const { verifyToken } = require("../middleware/verifyToken")
 
 // Create a new game
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
-    const game = await Game.create(req.body)
+    const game = await Game.create({ ...req.body, ownerId: req.user.id })
     res.status(201).json(game)
   } catch (error) {
     res.status(400).json({ error: error.message })
@@ -13,9 +14,13 @@ router.post("/", async (req, res) => {
 })
 
 // Get all games
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
-    const games = await Game.findAll()
+    const games = await Game.findAll({
+      where: {
+        ownerId: req.user.id,
+      },
+    })
     res.json(games)
   } catch (error) {
     res.status(500).json({ error: error.message })
