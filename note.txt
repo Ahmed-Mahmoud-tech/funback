@@ -38,7 +38,7 @@ CREATE TABLE sections (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE games (
+CREATE TABLE game (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     "ownerId" INT REFERENCES users(id),
@@ -60,10 +60,10 @@ CREATE TABLE purchases_item (
 );
 
 
-CREATE TABLE players_purchases (
+CREATE TABLE players_purchase (
     id SERIAL PRIMARY KEY,
     "playerId" INT NOT NULL,
-    "item" INT REFERENCES purchases_items(id),
+    "item" INT REFERENCES purchases_item(id),
     "ownerId" INT REFERENCES users(id),
     "count" INT NOT NULL,
     "status" VARCHAR(50) CHECK (status IN ('paid', 'notPaid')) NOT NULL DEFAULT 'notPaid',
@@ -72,19 +72,20 @@ CREATE TABLE players_purchases (
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-CREATE TABLE session (
+CREATE TABLE sessions (
     id SERIAL PRIMARY KEY,
-    player_id INT NOT NULL,
-    section_id INT REFERENCES sections(id),
-    game_id INT REFERENCES games(id),
-    type VARCHAR(50) CHECK (type IN ('multi', 'single')) NOT NULL,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP,
-    status VARCHAR(50) CHECK (status IN ('paid', 'notPaid')) NOT NULL DEFAULT 'notPaid',
-    amount DECIMAL(10, 2),
-    created_by INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    "playerId" INT NOT NULL,
+    "ownerId" INT REFERENCES users(id),
+    "sectionId" INT REFERENCES sections(id),
+    "gameId" INT REFERENCES games(id),
+    "type" VARCHAR(50) CHECK (type IN ('multi', 'single')) NOT NULL,
+    "startTime" TIMESTAMP,
+    "endTime" TIMESTAMP,
+    "status" VARCHAR(50) CHECK (status IN ('paid', 'notPaid')) NOT NULL DEFAULT 'notPaid',
+    "amount" DECIMAL(10, 2),
+    "createdBy" INT,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 

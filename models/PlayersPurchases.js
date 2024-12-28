@@ -18,7 +18,7 @@ const PlayersPurchase = sequelize.define(
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   {
-    tableName: "players_purchases",
+    tableName: "players_purchase",
   }
 )
 

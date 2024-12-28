@@ -21,7 +21,7 @@ const Session = sequelize.define(
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   {
-    tableName: "session",
+    tableName: "sessions",
   }
 )
 
