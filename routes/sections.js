@@ -15,11 +15,11 @@ router.post("/", verifyToken, async (req, res) => {
   }
 })
 
-router.get("/", verifyToken, async (req, res) => {
+router.get("/:ownerId", async (req, res) => {
   try {
     const sections = await Section.findAll({
       where: {
-        ownerId: req.user.id,
+        ownerId: req.params.ownerId,
         // status: {
         //   [Op.ne]: "blocked",
         // },

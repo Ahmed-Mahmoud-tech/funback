@@ -103,7 +103,7 @@ router.get("/newPlayerId/:ownerId", async (req, res) => {
     // Fetch playerIds from session
     const sessionPlayerIds = await Session.findAll({
       where: {
-        createdAt: {
+        endTime: {
           [Op.gte]: last24Hours,
         },
         ownerId: req.params.ownerId,

@@ -77,7 +77,7 @@ CREATE TABLE sessions (
     "playerId" INT NOT NULL,
     "ownerId" INT REFERENCES users(id),
     "sectionId" INT REFERENCES sections(id),
-    "gameId" INT REFERENCES games(id),
+    "gameId" INT REFERENCES game(id),
     "type" VARCHAR(50) CHECK (type IN ('multi', 'single')) NOT NULL,
     "startTime" TIMESTAMP,
     "endTime" TIMESTAMP,
