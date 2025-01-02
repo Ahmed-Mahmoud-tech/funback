@@ -3,6 +3,7 @@ const router = express.Router()
 const PlayersPurchase = require("../models/PlayersPurchases")
 const Session = require("../models/Session")
 const { Op } = require("sequelize")
+const { verifyToken } = require("../middleware/verifyToken")
 
 // Create a new player's purchase
 router.post("/", async (req, res) => {
@@ -83,7 +84,7 @@ router.delete("/:id", async (req, res) => {
   }
 })
 
-router.get("/newPlayerId/:ownerId", async (req, res) => {
+router.get("/newPlayerId/", verifyToken, async (req, res) => {
   try {
     // Calculate the start of the last 24 hours
     const now = new Date()
@@ -95,7 +96,7 @@ router.get("/newPlayerId/:ownerId", async (req, res) => {
         createdAt: {
           [Op.gte]: last24Hours,
         },
-        ownerId: req.params.ownerId,
+        ownerId: req.user.owner,
       },
       attributes: ["playerId"],
     })
@@ -106,7 +107,7 @@ router.get("/newPlayerId/:ownerId", async (req, res) => {
         endTime: {
           [Op.gte]: last24Hours,
         },
-        ownerId: req.params.ownerId,
+        ownerId: req.user.owner,
       },
       attributes: ["playerId"],
     })

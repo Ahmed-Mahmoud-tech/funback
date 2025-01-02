@@ -4,7 +4,8 @@ const router = express.Router()
 const User = require("../models/User")
 const Request = require("../models/Request")
 const { verifyToken } = require("../middleware/verifyToken")
-// const { Op } = require("sequelize")
+const { Op } = require("sequelize")
+const { createToken } = require("../lib/Common")
 
 router.post("/", async (req, res) => {
   try {
@@ -76,21 +77,42 @@ router.post("/", async (req, res) => {
   }
 })
 
-router.get("/", verifyToken, async (req, res) => {
+router.get("/owner/", verifyToken, async (req, res) => {
   try {
-    console.log("Fetching requests for user:", req.user)
-
     const requests = await Request.findAll({
       where: {
         fromUser: req.user.id,
-        // status: {
-        //   [Op.ne]: "blocked",
-        // },
       },
       include: [
         {
           model: User,
           as: "toUserInfo",
+          attributes: ["id", "username", "phoneNumber"],
+        },
+      ],
+    })
+
+    res.json(requests)
+  } catch (error) {
+    console.error("Error fetching requests:", error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
+router.get("/employee/", verifyToken, async (req, res) => {
+  try {
+    const requests = await Request.findAll({
+      where: {
+        toUser: req.user.id,
+        status: {
+          // [Op.ne]: "pending",
+          [Op.or]: ["accepted", "pending"],
+        },
+      },
+      include: [
+        {
+          model: User,
+          as: "fromUserInfo",
           attributes: ["id", "username", "phoneNumber"],
         },
       ],
@@ -115,12 +137,22 @@ router.get("/:id", async (req, res) => {
 })
 
 // Update a requests by ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const requests = await Request.findByPk(req.params.id)
     if (!requests) return res.status(404).json({ error: "Request not found" })
     await requests.update(req.body)
-    res.json(requests)
+    console.log(req.body.fromUser, "444444444444444444444444444444444")
+    let token
+    if (req.body.status == "accepted") {
+      token = createToken(
+        res,
+        req.user.id,
+        req.user.type || null,
+        req.body.fromUser
+      )
+    }
+    res.json({ ...requests.defaultValue, token })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }

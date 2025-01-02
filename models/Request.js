@@ -21,5 +21,6 @@ const Request = sequelize.define(
   }
 )
 Request.belongsTo(User, { as: "toUserInfo", foreignKey: "toUser" })
+Request.belongsTo(User, { as: "fromUserInfo", foreignKey: "fromUser" })
 
 module.exports = Request

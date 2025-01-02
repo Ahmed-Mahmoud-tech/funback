@@ -35,7 +35,12 @@ router.get(
     failureRedirect: `${FRONT_URL}/LoginScreen`,
   }),
   (req, res) => {
-    const token = createToken(res, req.user.id, req.user.type || null)
+    const token = createToken(
+      res,
+      req.user.id,
+      req.user.type || null,
+      req.user.type == "owner" ? req.user.id || req.user.owner : null
+    )
     res.redirect(
       `${FRONT_URL}/MainInfoScreen?token=${token}&&userId=${req.user.id}`
     )

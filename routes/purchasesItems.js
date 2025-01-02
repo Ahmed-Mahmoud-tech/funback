@@ -14,11 +14,12 @@ router.post("/", async (req, res) => {
 })
 
 // Get all purchase items
-router.get("/:id", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
+    console.log(req.user)
     const items = await PurchasesItem.findAll({
       where: {
-        ownerId: req.params.id,
+        ownerId: req.user.owner,
       },
     })
     res.json(items)
@@ -41,7 +42,7 @@ router.get("/:id", async (req, res) => {
 
 // Update a purchase item by ID
 
-router.put("/:ownerId/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const item = await PurchasesItem.findByPk(req.params.id)
     if (!item) return res.status(404).json({ error: "Item not found" })

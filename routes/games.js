@@ -14,11 +14,11 @@ router.post("/", verifyToken, async (req, res) => {
 })
 
 // Get all games
-router.get("/:ownerId", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const games = await Game.findAll({
       where: {
-        ownerId: req.params.ownerId,
+        ownerId: req.user.owner,
       },
     })
     res.json(games)

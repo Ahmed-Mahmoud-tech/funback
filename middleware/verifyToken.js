@@ -18,6 +18,10 @@ const verifyToken = (req, res, next) => {
     // Verify the token
     const verified = jwt.verify(token, process.env.JWT_SECRET)
     // Attach user data to request object
+    console.log(
+      verified,
+      "verifiedverifiedverifiedverifiedverifiedverifiedverifiedverifiedverifiedverifiedverifiedverifiedverified"
+    )
     req.user = verified
     next()
   } catch (err) {

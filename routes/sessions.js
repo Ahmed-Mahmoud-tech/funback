@@ -17,7 +17,6 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const { playerId, startDate, sessionType, status } = req.query
-    console.log({ playerId, startDate, sessionType, status })
 
     const whereClause = {}
     if (playerId) {

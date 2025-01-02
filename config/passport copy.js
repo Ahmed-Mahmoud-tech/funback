@@ -33,14 +33,8 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log(
-          process.env.ENV_STATUS === "production",
-          "dddddddddddd",
-          process.env.ENV_STATUS
-        )
         let user = await User.findOne({ email: profile.emails[0].value })
         if (!user) {
-          console.log(profile, "5222222222222")
           user = await new User({
             username: profile.displayName,
             googleId: profile.id,
