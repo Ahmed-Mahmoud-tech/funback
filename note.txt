@@ -105,9 +105,8 @@ CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     from_user INT REFERENCES users(id),
     to_user INT REFERENCES users(id),
-    title VARCHAR(255),
-    body TEXT,
-    actions JSONB DEFAULT '[]'::JSONB,
+    body JSONB,
+    is_read BOOLEAN DEFAULT TRUE,
     created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

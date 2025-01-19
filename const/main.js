@@ -1,5 +1,8 @@
 const FRONT_URL =
-  process.env.ENV_STATUS == "stage" ? "http://localhost:8081" : "funapp:/"
+  process.env.ENV_STATUS == "stage"
+    ? "http://localhost:8081"
+    : "http://localhost:8081";
+// process.env.ENV_STATUS == "stage" ? "http://localhost:8081" : "funapp:/"
 
 // const fs = require("fs")
 // const path = require("path")
@@ -24,6 +27,6 @@ const FRONT_URL =
 const BACKEND_URL =
   process.env.ENV_STATUS == "stage"
     ? "http://localhost:5000"
-    : "https://virtualscene.tech"
+    : "https://virtualscene.tech";
 
-module.exports = { FRONT_URL, BACKEND_URL }
+module.exports = { FRONT_URL, BACKEND_URL };
