@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { postNotification } = require("../services/notificationService");
+const { addRequest } = require("../services/notificationService");
 const User = require("../models/User");
 const Request = require("../models/Request");
 const { verifyToken } = require("../middleware/verifyToken");
@@ -74,7 +74,7 @@ router.post("/", async (req, res) => {
       },
     };
 
-    await postNotification(req, res, {
+    await addRequest(req, res, {
       from_user: owner.id,
       to_user: employee.id,
       body: {
@@ -138,17 +138,6 @@ router.get("/employee/", verifyToken, async (req, res) => {
   }
 });
 
-// Get a requests by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const requests = await Request.findByPk(req.params.id);
-    if (!requests) return res.status(404).json({ error: "Request not found" });
-    res.json(requests);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Update a requests by ID
 router.put("/:id", verifyToken, async (req, res) => {
   try {
@@ -171,11 +160,35 @@ router.put("/:id", verifyToken, async (req, res) => {
   }
 });
 
-// Delete a requests by ID
-router.delete("/:id", async (req, res) => {
+// Get a requests by ID
+router.get("/:id", async (req, res) => {
   try {
     const requests = await Request.findByPk(req.params.id);
     if (!requests) return res.status(404).json({ error: "Request not found" });
+    res.json(requests);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete a requests by ID
+router.delete("/", async (req, res) => {
+  console.log(req.query, "req.queryreq.queryreq.queryreq.queryreq.query");
+
+  try {
+    const requests = await Request.findByPk(req.query.requestId);
+    if (!requests) return res.status(404).json({ error: "Request not found" });
+
+    await addRequest(req, res, {
+      from_user: req.query.ownerId,
+      to_user: req.query.employeeId,
+      body: {
+        author: req.query.ownerName,
+        type: "ownerRemoveRequest",
+        time: requests.dataValues.updatedAt,
+      },
+    });
+
     await requests.destroy();
     res.json({ message: "Request deleted successfully" });
   } catch (error) {

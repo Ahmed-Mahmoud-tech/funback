@@ -1,6 +1,6 @@
 const Notification = require("../models/Notification");
 
-const postNotification = async (req, res, data) => {
+const addRequest = async (req, res, data) => {
   try {
     const message = await Notification.create({
       from_user: data.from_user,
@@ -15,4 +15,4 @@ const postNotification = async (req, res, data) => {
   }
 };
 
-module.exports = { postNotification };
+module.exports = { addRequest };
