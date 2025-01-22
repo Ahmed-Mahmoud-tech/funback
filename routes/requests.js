@@ -143,8 +143,8 @@ router.put("/:id", verifyToken, async (req, res) => {
   try {
     const requests = await Request.findByPk(req.params.id);
     if (!requests) return res.status(404).json({ error: "Request not found" });
-    await requests.update(req.body);
-    console.log(req.body.fromUser, "444444444444444444444444444444444");
+    const employee = await User.findByPk(requests.dataValues.toUser);
+
     let token;
     if (req.body.status == "accepted") {
       token = createToken(
@@ -154,6 +154,22 @@ router.put("/:id", verifyToken, async (req, res) => {
         req.body.fromUser
       );
     }
+
+    await addRequest(req, res, {
+      from_user: requests.dataValues.toUser,
+      to_user: requests.dataValues.fromUser,
+      body: {
+        author: employee.username,
+        type:
+          req.body.status == "accepted"
+            ? "employeeAcceptOwnerRequest"
+            : "employeeRejectOwnerRequest",
+        time: requests.dataValues.updatedAt,
+      },
+    });
+
+    await requests.update(req.body);
+
     res.json({ ...requests.defaultValue, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -173,8 +189,6 @@ router.get("/:id", async (req, res) => {
 
 // Delete a requests by ID
 router.delete("/", async (req, res) => {
-  console.log(req.query, "req.queryreq.queryreq.queryreq.queryreq.query");
-
   try {
     const requests = await Request.findByPk(req.query.requestId);
     if (!requests) return res.status(404).json({ error: "Request not found" });
