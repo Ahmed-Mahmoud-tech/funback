@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize")
-const sequelize = require("../db")
+const { DataTypes } = require("sequelize");
+const sequelize = require("../db");
 
 const Session = sequelize.define(
   "Session",
@@ -11,6 +11,7 @@ const Session = sequelize.define(
     type: { type: DataTypes.STRING, allowNull: false },
     startTime: { type: DataTypes.DATE },
     endTime: { type: DataTypes.DATE },
+    ownerId: { type: DataTypes.INTEGER, allowNull: false },
     status: {
       type: DataTypes.STRING,
       defaultValue: "notPaid",
@@ -23,6 +24,6 @@ const Session = sequelize.define(
   {
     tableName: "sessions",
   }
-)
+);
 
-module.exports = Session
+module.exports = Session;

@@ -80,7 +80,7 @@ router.post("/", async (req, res) => {
       body: {
         author: owner.username,
         type: "ownerSendRequest",
-        time: request.dataValues.updatedAt,
+        time: new Date().toISOString(),
       },
     });
 
@@ -164,7 +164,7 @@ router.put("/:id", verifyToken, async (req, res) => {
           req.body.status == "accepted"
             ? "employeeAcceptOwnerRequest"
             : "employeeRejectOwnerRequest",
-        time: requests.dataValues.updatedAt,
+        time: new Date().toISOString(),
       },
     });
 
@@ -199,7 +199,7 @@ router.delete("/", async (req, res) => {
       body: {
         author: req.query.ownerName,
         type: "ownerRemoveRequest",
-        time: requests.dataValues.updatedAt,
+        time: new Date().toISOString(),
       },
     });
 
