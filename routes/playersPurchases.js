@@ -5,6 +5,7 @@ const Session = require("../models/Session");
 const { Op } = require("sequelize");
 const { verifyToken } = require("../middleware/verifyToken");
 const User = require("../models/User");
+const { addRequest } = require("../services/notificationService");
 
 // Create a new player's purchase
 router.post("/", verifyToken, async (req, res) => {
@@ -19,9 +20,10 @@ router.post("/", verifyToken, async (req, res) => {
           from_user: req.user.id,
           to_user: req.body.ownerId,
           body: {
-            author: req.body.username,
             type: "newCheckout",
-            section: req.body.sectionName,
+            playerId: req.body.playerId,
+            amount: req.body.amount,
+            author: req.body.username,
             time: new Date().toISOString(),
           },
         });
@@ -78,11 +80,60 @@ router.get("/", async (req, res) => {
 });
 
 // Update a player's purchase status
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const purchase = await PlayersPurchase.findByPk(req.params.id);
     if (!purchase) return res.status(404).json({ error: "Purchase not found" });
+    console.log(req.body, "ddddddddddddddddddd");
     await purchase.update(req.body);
+    if (req.body.isFromEmployee === "employee") {
+      const owner = await User.findByPk(req.body.ownerId);
+
+      if (owner.session == true) {
+        if (req.body.status == "notPaid") {
+          await addRequest(req, res, {
+            from_user: req.user.id,
+            to_user: req.body.ownerId,
+            body: {
+              author: req.body.username,
+              type: "cancelItemCheckout",
+              time: new Date().toISOString(),
+              item: req.body.itemName,
+              count: req.body.count,
+              playerId: req.body.playerId,
+            },
+          });
+        } else if (req.body.status == "paid") {
+          await addRequest(req, res, {
+            from_user: req.user.id,
+            to_user: req.body.ownerId,
+            body: {
+              author: req.body.username,
+              type: "itemCheckout",
+              time: new Date().toISOString(),
+              item: req.body.itemName,
+              count: req.body.count,
+              amount: req.body.amount,
+              playerId: req.body.playerId,
+            },
+          });
+        }
+        // else {
+        //   await addRequest(req, res, {
+        //     from_user: req.user.id,
+        //     to_user: req.body.ownerId,
+        //     body: {
+        //       author: req.body.username,
+        //       type: "updatedSession",
+        //       section: req.body.sectionName,
+        //       start: session.updatedAt,
+        //       time: new Date().toISOString(),
+        //     },
+        //   });
+        // }
+      }
+    }
+
     res.json(purchase);
   } catch (error) {
     res.status(400).json({ error: error.message });

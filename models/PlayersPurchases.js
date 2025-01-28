@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize")
-const sequelize = require("../db")
+const { DataTypes } = require("sequelize");
+const sequelize = require("../db");
 
 const PlayersPurchase = sequelize.define(
   "PlayersPurchase",
@@ -13,6 +13,7 @@ const PlayersPurchase = sequelize.define(
       type: DataTypes.STRING,
       defaultValue: "notPaid",
     },
+    amount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
     createdBy: { type: DataTypes.INTEGER },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
@@ -20,6 +21,6 @@ const PlayersPurchase = sequelize.define(
   {
     tableName: "players_purchase",
   }
-)
+);
 
-module.exports = PlayersPurchase
+module.exports = PlayersPurchase;

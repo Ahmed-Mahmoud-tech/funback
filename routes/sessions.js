@@ -82,18 +82,47 @@ router.put("/:id", verifyToken, async (req, res) => {
 
     if (req.body.isFromEmployee === "employee") {
       const owner = await User.findByPk(req.body.ownerId);
+
       if (owner.session == true) {
-        await addRequest(req, res, {
-          from_user: req.user.id,
-          to_user: req.body.ownerId,
-          body: {
-            author: req.body.username,
-            type: "updatedSession",
-            section: req.body.sectionName,
-            start: session.updatedAt,
-            time: new Date().toISOString(),
-          },
-        });
+        if (req.body.status == "notPaid") {
+          await addRequest(req, res, {
+            from_user: req.user.id,
+            to_user: req.body.ownerId,
+            body: {
+              author: req.body.username,
+              type: "cancelSessionCheckout",
+              time: new Date().toISOString(),
+              section: req.body.sectionName,
+              amount: req.body.amount,
+              playerId: req.body.playerId,
+            },
+          });
+        } else if (req.body.status == "paid") {
+          await addRequest(req, res, {
+            from_user: req.user.id,
+            to_user: req.body.ownerId,
+            body: {
+              author: req.body.username,
+              type: "sessionCheckout",
+              time: new Date().toISOString(),
+              section: req.body.sectionName,
+              amount: req.body.amount,
+              playerId: req.body.playerId,
+            },
+          });
+        } else {
+          await addRequest(req, res, {
+            from_user: req.user.id,
+            to_user: req.body.ownerId,
+            body: {
+              author: req.body.username,
+              type: "updatedSession",
+              section: req.body.sectionName,
+              start: session.updatedAt,
+              time: new Date().toISOString(),
+            },
+          });
+        }
       }
     }
 
