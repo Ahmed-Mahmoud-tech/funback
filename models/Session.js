@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
-
+const Game = require("./Game");
 const Session = sequelize.define(
   "Session",
   {
@@ -25,5 +25,11 @@ const Session = sequelize.define(
     tableName: "sessions",
   }
 );
+
+Session.belongsTo(Game, {
+  foreignKey: "gameId", // The foreign key in the Session model
+  onDelete: "CASCADE", // Enable cascade delete
+  onUpdate: "CASCADE", // Enable cascade update
+});
 
 module.exports = Session;
