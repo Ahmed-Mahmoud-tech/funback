@@ -15,6 +15,7 @@ router.post("/", verifyToken, async (req, res) => {
 
       if (owner.purchasesItems == true) {
         await addRequest(req, res, {
+          notification_type: "purchasesItems",
           from_user: req.user.id,
           to_user: req.body.ownerId,
           body: {
@@ -73,6 +74,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 
       if (owner.purchasesItems == true) {
         await addRequest(req, res, {
+          notification_type: "purchasesItems",
           from_user: req.user.id,
           to_user: req.body.ownerId,
           body: {
@@ -104,6 +106,7 @@ router.delete("/", verifyToken, async (req, res) => {
 
       if (owner.purchasesItems == true) {
         await addRequest(req, res, {
+          notification_type: "purchasesItems",
           from_user: req.user.id,
           to_user: req.query.ownerId,
           body: {

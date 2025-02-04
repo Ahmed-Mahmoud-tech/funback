@@ -3,6 +3,7 @@ const Notification = require("../models/Notification");
 const addRequest = async (req, res, data) => {
   try {
     const message = await Notification.create({
+      notification_type: data.notification_type,
       from_user: data.from_user,
       to_user: data.to_user,
       body: data.body,

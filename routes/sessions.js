@@ -18,6 +18,7 @@ router.post("/", verifyToken, async (req, res) => {
         const section = await Section.findByPk(req.body.sectionId);
 
         await addRequest(req, res, {
+          notification_type: "sessions",
           from_user: req.user.id,
           to_user: req.body.ownerId,
           body: {
@@ -86,6 +87,7 @@ router.put("/:id", verifyToken, async (req, res) => {
       if (owner.session == true) {
         if (req.body.status == "notPaid") {
           await addRequest(req, res, {
+            notification_type: "sessions",
             from_user: req.user.id,
             to_user: req.body.ownerId,
             body: {
@@ -99,6 +101,7 @@ router.put("/:id", verifyToken, async (req, res) => {
           });
         } else if (req.body.status == "paid") {
           await addRequest(req, res, {
+            notification_type: "sessions",
             from_user: req.user.id,
             to_user: req.body.ownerId,
             body: {
@@ -112,6 +115,7 @@ router.put("/:id", verifyToken, async (req, res) => {
           });
         } else {
           await addRequest(req, res, {
+            notification_type: "sessions",
             from_user: req.user.id,
             to_user: req.body.ownerId,
             body: {
@@ -143,6 +147,7 @@ router.delete("/", verifyToken, async (req, res) => {
       const owner = await User.findByPk(req.query.ownerId);
       if (owner.session == true) {
         await addRequest(req, res, {
+          notification_type: "sessions",
           from_user: req.user.id,
           to_user: req.query.ownerId,
           body: {

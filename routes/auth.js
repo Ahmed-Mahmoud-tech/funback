@@ -1,7 +1,7 @@
-const { FRONT_URL } = require("../const/main")
-const router = require("express").Router()
-const passport = require("passport")
-const { createToken } = require("../lib/Common")
+const { FRONT_URL } = require("../const/main");
+const router = require("express").Router();
+const passport = require("passport");
+const { createToken } = require("../lib/Common");
 
 // const fs = require("fs")
 // const path = require("path")
@@ -24,10 +24,10 @@ const { createToken } = require("../lib/Common")
 router.get(
   "/google",
   (req, res, next) => {
-    next() // Pass control to the next middleware (passport.authenticate)
+    next(); // Pass control to the next middleware (passport.authenticate)
   },
   passport.authenticate("google", { scope: ["profile", "email"] })
-)
+);
 
 router.get(
   "/google/callback",
@@ -40,24 +40,24 @@ router.get(
       req.user.id,
       req.user.type || null,
       req.user.type == "owner" ? req.user.id || req.user.owner : null
-    )
+    );
     res.redirect(
       `${FRONT_URL}/MainInfoScreen?token=${token}&&userId=${req.user.id}`
-    )
+    );
   }
-)
+);
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {
-      return next(err) // Handle any logout errors
+      return next(err); // Handle any logout errors
     }
-    res.json("OK")
-  })
-})
+    res.json("OK");
+  });
+});
 
 // router.get("/logout", (req, res) => {
 //   req.logout()
 //   res.redirect(`${FRONT_URL}/LoginScreen`)
 // })
 
-module.exports = router
+module.exports = router;

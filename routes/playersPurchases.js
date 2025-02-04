@@ -17,6 +17,7 @@ router.post("/", verifyToken, async (req, res) => {
       const owner = await User.findByPk(req.body.ownerId);
       if (owner.playersPurchases == true) {
         await addRequest(req, res, {
+          notification_type: "playersPurchases",
           from_user: req.user.id,
           to_user: req.body.ownerId,
           body: {
@@ -92,6 +93,7 @@ router.put("/:id", verifyToken, async (req, res) => {
       if (owner.session == true) {
         if (req.body.status == "notPaid") {
           await addRequest(req, res, {
+            notification_type: "playersPurchases",
             from_user: req.user.id,
             to_user: req.body.ownerId,
             body: {
@@ -105,6 +107,7 @@ router.put("/:id", verifyToken, async (req, res) => {
           });
         } else if (req.body.status == "paid") {
           await addRequest(req, res, {
+            notification_type: "playersPurchases",
             from_user: req.user.id,
             to_user: req.body.ownerId,
             body: {

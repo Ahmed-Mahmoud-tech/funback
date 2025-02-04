@@ -103,6 +103,7 @@ CREATE TABLE reservation (
 
 CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
+    notification_type VARCHAR(50) NOT NULL
     from_user INT REFERENCES users(id),
     to_user INT REFERENCES users(id),
     body JSONB,

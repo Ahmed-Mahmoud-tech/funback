@@ -7,6 +7,7 @@ const Notification = sequelize.define(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     from_user: { type: DataTypes.INTEGER, allowNull: false },
     to_user: { type: DataTypes.INTEGER, allowNull: false },
+    notification_type: { type: DataTypes.STRING, allowNull: false },
     body: { type: DataTypes.JSONB, allowNull: true },
     is_read: { type: DataTypes.BOOLEAN, defaultValue: false },
     createdBy: { type: DataTypes.INTEGER },

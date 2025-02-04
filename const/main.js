@@ -1,8 +1,8 @@
 const FRONT_URL =
-  process.env.ENV_STATUS == "stage"
-    ? "http://localhost:8081"
-    : "http://localhost:8081";
-// process.env.ENV_STATUS == "stage" ? "http://localhost:8081" : "funapp:/"
+  // process.env.ENV_STATUS == "stage"
+  //   ? "http://localhost:8081"
+  //   : "http://localhost:8081";
+  process.env.ENV_STATUS == "stage" ? "http://localhost:8081" : "funapp:/";
 
 // const fs = require("fs")
 // const path = require("path")

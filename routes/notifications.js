@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Notification = require("../models/Notification");
 const { Op } = require("sequelize");
+const { verifyToken } = require("../middleware/verifyToken");
 
 // Get the count of all unread notification messages
 router.get("/count/:id", async (req, res) => {
@@ -17,13 +18,17 @@ router.get("/count/:id", async (req, res) => {
 });
 
 // Get all notification messages
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   const startDate = req.query.startDate;
+  const notificationType = req.query.notificationType;
 
   try {
     const messages = await Notification.findAll({
       where: {
         to_user: req.params.id,
+        ...(notificationType !== "all" && {
+          notification_type: notificationType,
+        }),
         createdAt: {
           [Op.gte]: new Date(parseInt(startDate)), // Start of the day
           [Op.lt]: new Date(parseInt(startDate) + 24 * 60 * 60 * 1000), // Start of the next day

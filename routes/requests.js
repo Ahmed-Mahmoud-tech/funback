@@ -75,6 +75,7 @@ router.post("/", async (req, res) => {
     };
 
     await addRequest(req, res, {
+      notification_type: "employmentRequest",
       from_user: owner.id,
       to_user: employee.id,
       body: {
@@ -156,6 +157,7 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
 
     await addRequest(req, res, {
+      notification_type: "employmentRequest",
       from_user: requests.dataValues.toUser,
       to_user: requests.dataValues.fromUser,
       body: {
@@ -194,6 +196,7 @@ router.delete("/", async (req, res) => {
     if (!requests) return res.status(404).json({ error: "Request not found" });
 
     await addRequest(req, res, {
+      notification_type: "employmentRequest",
       from_user: req.query.ownerId,
       to_user: req.query.employeeId,
       body: {
