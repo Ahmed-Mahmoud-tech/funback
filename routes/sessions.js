@@ -6,11 +6,16 @@ const { addRequest } = require("../services/notificationService");
 const User = require("../models/User");
 const { verifyToken } = require("../middleware/verifyToken");
 const Section = require("../models/Section");
+const { scheduleReminder } = require("../services/scheduleReminder");
 
 // Create a new session
 router.post("/", verifyToken, async (req, res) => {
   try {
     const session = await Session.create(req.body);
+
+    if (req.body.endTime) {
+      scheduleReminder(new Date(req.body.endTime), req);
+    }
 
     if (req.body.isFromEmployee === "employee") {
       const owner = await User.findByPk(req.body.ownerId);
@@ -80,6 +85,10 @@ router.put("/:id", verifyToken, async (req, res) => {
   try {
     const session = await Session.findByPk(req.params.id);
     if (!session) return res.status(404).json({ error: "Session not found" });
+
+    if (req.body.endTime && req.body.endTime !== session.endTime) {
+      scheduleReminder(new Date(req.body.endTime), req);
+    }
 
     if (req.body.isFromEmployee === "employee") {
       const owner = await User.findByPk(req.body.ownerId);
