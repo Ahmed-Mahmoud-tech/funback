@@ -3,6 +3,9 @@ const router = require("express").Router();
 const passport = require("passport");
 const { createToken } = require("../lib/Common");
 
+const { Expo } = require("expo-server-sdk");
+const PushToken = require("../models/PushToken");
+
 // const fs = require("fs")
 // const path = require("path")
 // const fileName = "example.txt"
@@ -46,6 +49,7 @@ router.get(
     );
   }
 );
+
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {
@@ -59,5 +63,31 @@ router.get("/logout", (req, res, next) => {
 //   req.logout()
 //   res.redirect(`${FRONT_URL}/LoginScreen`)
 // })
+
+router.post("/expoRegister", async (req, res) => {
+  const { token } = req.body;
+  console.log("000000000000000144444", token);
+
+  if (!Expo.isExpoPushToken(token)) {
+    return res.status(400).json({ error: "Invalid token" });
+  }
+
+  try {
+    // Check if the token already exists
+    const existingToken = await PushToken.findOne({ where: { token } });
+
+    if (existingToken) {
+      return res.status(200).json({ message: "Token already registered" });
+    }
+
+    // Insert the new token into the database
+    await PushToken.create({ token });
+
+    res.status(200).json({ message: "Token registered" });
+  } catch (error) {
+    console.error("Error registering token:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = router;
