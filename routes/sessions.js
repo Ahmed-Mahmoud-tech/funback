@@ -35,7 +35,6 @@ router.post("/", verifyToken, async (req, res) => {
         });
       }
     }
-
     res.status(201).json(session);
   } catch (error) {
     res.status(400).json({ error: error.message });

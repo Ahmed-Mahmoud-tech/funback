@@ -4,7 +4,7 @@ const passport = require("passport");
 const { createToken } = require("../lib/Common");
 
 const { Expo } = require("expo-server-sdk");
-const PushToken = require("../models/PushToken");
+const { PushToken } = require("../models/PushToken");
 
 // const fs = require("fs")
 // const path = require("path")
@@ -66,7 +66,6 @@ router.get("/logout", (req, res, next) => {
 
 router.post("/expoRegister", async (req, res) => {
   const { token } = req.body;
-  console.log("000000000000000144444", token);
 
   if (!Expo.isExpoPushToken(token)) {
     return res.status(400).json({ error: "Invalid token" });
